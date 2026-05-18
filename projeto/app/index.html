@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Clínica Veterinária</title>
+    <style>
+        /* Estilização Base - Tema Escuro */
+        body {
+            background-color: #1D232A;
+            color: #E0E0E0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Contêineres principais */
+        .container {
+            background-color: #26323E;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 800px;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+        }
+
+        h2 { margin-top: 0; color: #FFFFFF; text-align: center; border-bottom: 1px solid #1D232A; padding-bottom: 10px; }
+        h3 { margin-top: 0; color: #E0E0E0; font-size: 18px; margin-bottom: 15px; }
+
+        /* Dashboard e Grids */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            width: 100%;
+            max-width: 800px;
+            margin-bottom: 20px;
+        }
+        
+        .card {
+            background-color: #26323E;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #3B82F6;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+        .card-title {
+            font-size: 14px;
+            color: #9CA3AF;
+            text-transform: uppercase;
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        .card-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: #FFFFFF;
+        }
+
+        /* Formulários */
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: #9CA3AF; font-size: 14px; }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #1D232A;
+            border-radius: 5px;
+            background-color: #1D232A;
+            color: #FFF;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #3B82F6;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            transition: background-color 0.3s;
+            margin-top: 5px;
+        }
+        button:hover { background-color: #2563EB; }
+
+        /* Tabela de Consultas */
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #1D232A; }
+        th { background-color: #1D232A; color: #3B82F6; text-transform: uppercase; font-size: 13px; }
+        
+        /* Badges de Status */
+        .status-badge { padding: 5px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; }
+        .status-1 { background-color: #F59E0B; color: #FFF; } /* Agendada */
+        .status-2 { background-color: #10B981; color: #FFF; } /* Realizada */
+    </style>
+</head>
+<body>
+
+    <div class="dashboard-grid">
+        <div class="card">
+            <span class="card-title">Consultas Hoje</span>
+            <div class="card-value" id="stats-hoje">0</div>
+        </div>
+        <div class="card">
+            <span class="card-title">Pet Mais Atendido</span>
+            <div class="card-value" id="stats-top-pet">-</div>
+        </div>
+    </div>
+
+    <div class="dashboard-grid">
+        <div class="container" style="margin-bottom: 0;">
+            <h3>Cadastrar Veterinário</h3>
+            <form id="formVet">
+                <input type="text" id="vet_nome" placeholder="Nome do Médico" required>
+                <input type="text" id="vet_crmv" placeholder="CRMV" required>
+                <button type="submit">Salvar Veterinário</button>
+            </form>
+        </div>
+
+        <div class="container" style="margin-bottom: 0;">
+            <h3>Cadastrar Pet</h3>
+            <form id="formPet">
+                <input type="text" id="pet_nome" placeholder="Nome do Animal" required>
+                <input type="text" id="pet_especie" placeholder="Espécie (Ex: Cão, Gato)" required>
+                <input type="text" id="pet_dono" placeholder="Nome do Dono" required>
+                <button type="submit">Salvar Pet</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>Agendar Nova Consulta</h2>
+        <form id="formConsulta">
+            <div class="form-group">
+                <label for="data_hora">Data e Hora:</label>
+                <input type="datetime-local" id="data_hora" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="id_pet">Paciente (Pet):</label>
+                <select id="id_pet" required>
+                    <option value="">Carregando pets...</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="id_veterinario">Veterinário:</label>
+                <select id="id_veterinario" required>
+                    <option value="">Carregando veterinários...</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="diagnostico">Motivo / Diagnóstico Inicial:</label>
+                <input type="text" id="diagnostico" placeholder="Ex: Exame de rotina, Vacina..." required>
+            </div>
+
+            <button type="submit">Agendar Consulta</button>
+        </form>
+    </div>
+
+    <div class="container">
+        <h2>Painel de Consultas Ativas</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Data/Hora</th>
+                    <th>Pet</th>
+                    <th>Veterinário</th>
+                    <th>Motivo</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody id="tabelaConsultas">
+                </tbody>
+        </table>
+    </div>
+
+    <script>
+        // --- FUNÇÕES DE FORMATAÇÃO ---
+        function formatarData(dataString) {
+            const data = new Date(dataString);
+            return data.toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' });
+        }
+
+        function formatarStatus(statusId) {
+            if (statusId === 1) return '<span class="status-badge status-1">Agendada</span>';
+            if (statusId === 2) return '<span class="status-badge status-2">Realizada</span>';
+            return '<span class="status-badge">Cancelada</span>';
+        }
+
+        // --- FUNÇÕES DE CARREGAMENTO (GET) ---
+        async function carregarDashboard() {
+            try {
+                const response = await fetch('/dashboard-stats');
+                const data = await response.json();
+                document.getElementById('stats-hoje').innerText = data.hoje || 0;
+                document.getElementById('stats-top-pet').innerText = (data.ranking && data.ranking.length > 0) ? data.ranking[0].nome : "Nenhum";
+            } catch (error) { console.error('Erro dashboard:', error); }
+        }
+
+        async function carregarVeterinarios() {
+            try {
+                const response = await fetch('/veterinarios');
+                const vets = await response.json();
+                const selectVet = document.getElementById('id_veterinario');
+                selectVet.innerHTML = '<option value="">Selecione um Veterinário...</option>';
+                vets.forEach(vet => {
+                    selectVet.innerHTML += `<option value="${vet.id}">${vet.nome} (${vet.crmv})</option>`;
+                });
+            } catch (error) { console.error('Erro veterinários:', error); }
+        }
+
+        async function carregarPets() {
+            try {
+                const response = await fetch('/pets');
+                const pets = await response.json();
+                const selectPet = document.getElementById('id_pet');
+                selectPet.innerHTML = '<option value="">Selecione um Pet...</option>';
+                pets.forEach(pet => {
+                    selectPet.innerHTML += `<option value="${pet.id}">${pet.nome} - ${pet.especie} (Dono: ${pet.dono})</option>`;
+                });
+            } catch (error) { console.error('Erro pets:', error); }
+        }
+
+        async function carregarConsultas() {
+            try {
+                const response = await fetch('/consultas');
+                const consultas = await response.json();
+                const tbody = document.getElementById('tabelaConsultas');
+                tbody.innerHTML = ''; 
+                consultas.forEach(c => {
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${formatarData(c.data_hora)}</td>
+                            <td><strong>${c.pet_nome}</strong></td>
+                            <td>${c.vet_nome}</td>
+                            <td>${c.diagnostico}</td>
+                            <td>${formatarStatus(c.status)}</td>
+                        </tr>
+                    `;
+                });
+            } catch (error) { console.error('Erro consultas:', error); }
+        }
+
+        // --- EVENTOS DE CADASTRO (POST) ---
+        
+        // Cadastrar Veterinário
+        document.getElementById('formVet').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const data = {
+                nome: document.getElementById('vet_nome').value,
+                crmv: document.getElementById('vet_crmv').value
+            };
+            try {
+                const res = await fetch('/veterinarios', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+                if(res.ok) {
+                    alert('Veterinário cadastrado!');
+                    document.getElementById('formVet').reset();
+                    carregarVeterinarios(); // Atualiza o dropdown
+                } else { alert('Erro ao cadastrar veterinário.'); }
+            } catch (error) { console.error('Erro:', error); }
+        });
+
+        // Cadastrar Pet
+        document.getElementById('formPet').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const data = {
+                nome: document.getElementById('pet_nome').value,
+                especie: document.getElementById('pet_especie').value,
+                dono: document.getElementById('pet_dono').value
+            };
+            try {
+                const res = await fetch('/pets', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+                if(res.ok) {
+                    alert('Pet cadastrado!');
+                    document.getElementById('formPet').reset();
+                    carregarPets(); // Atualiza o dropdown
+                } else { alert('Erro ao cadastrar pet.'); }
+            } catch (error) { console.error('Erro:', error); }
+        });
+
+        // Agendar Consulta
+        document.getElementById('formConsulta').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const data = {
+                data_hora: document.getElementById('data_hora').value,
+                id_pet: parseInt(document.getElementById('id_pet').value),
+                id_veterinario: parseInt(document.getElementById('id_veterinario').value),
+                diagnostico: document.getElementById('diagnostico').value
+            };
+            try {
+                const res = await fetch('/consultas', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+                if(res.ok) {
+                    alert('Consulta agendada com sucesso!');
+                    document.getElementById('formConsulta').reset();
+                    carregarConsultas(); // Atualiza a tabela
+                    carregarDashboard(); // Atualiza os contadores
+                } else { alert('Erro ao agendar consulta.'); }
+            } catch (error) { console.error('Erro:', error); }
+        });
+
+        // --- INICIALIZAÇÃO ---
+        // Quando a página carrega, busca todos os dados do banco
+        carregarDashboard();
+        carregarVeterinarios();
+        carregarPets();
+        carregarConsultas();
+    </script>
+</body>
+</html>

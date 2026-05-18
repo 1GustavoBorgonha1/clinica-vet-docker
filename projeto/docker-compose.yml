@@ -1,0 +1,38 @@
+services:
+  db:
+    image: postgres:13
+    container_name: db_clinica
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: clinica_vet
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./app/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - rede_clinica
+
+  web:
+    build: ./app
+    container_name: app_clinica
+    ports:
+      - "3000:3000"
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=123456  # <-- AQUI ESTÁ A CORREÇÃO!
+      - DB_NAME=clinica_vet
+    depends_on:
+      - db
+    networks:
+      - rede_clinica
+
+volumes:
+  db_data:
+
+networks:
+  rede_clinica:
+    driver: bridge
