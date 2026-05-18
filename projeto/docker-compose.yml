@@ -15,7 +15,7 @@ services:
       - rede_clinica
 
   web:
-    build: ./app
+    build: .
     container_name: app_clinica
     ports:
       - "3000:3000"
@@ -23,7 +23,7 @@ services:
       - DB_HOST=db
       - DB_PORT=5432
       - DB_USER=postgres
-      - DB_PASSWORD=123456  # <-- AQUI ESTÁ A CORREÇÃO!
+      - DB_PASSWORD=123456
       - DB_NAME=clinica_vet
     depends_on:
       - db
