@@ -138,6 +138,19 @@ Este projeto foi desenvolvido com foco em:
 
 ---
 
+## 🐳 Imagem Pública no DockerHub
+
+A imagem Docker da aplicação foi publicada no DockerHub e pode ser acessada pelo link abaixo:
+
+🔗 https://hub.docker.com/r/gustavoborgonha/clinica-vet-app
+
+### 📥 Baixar a imagem manualmente
+
+```bash
+docker pull gustavoborgonha/clinica-vet-app
+
+---
+
 ## 👨‍💻 Autor
 
 Desenvolvido por **Gustavo Borgonha**
