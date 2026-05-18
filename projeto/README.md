@@ -70,7 +70,7 @@ git clone https://github.com/1GustavoBorgonha1/clinica-vet-docker.git
 ### 📁 Acesse a pasta do projeto
 
 ```bash
-cd clinica-vet-docker
+cd clinica-vet-docker/projeto
 ```
 
 ---

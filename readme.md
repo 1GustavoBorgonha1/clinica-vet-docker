@@ -70,7 +70,7 @@ git clone https://github.com/1GustavoBorgonha1/clinica-vet-docker.git
 ### 📁 Acesse a pasta do projeto
 
 ```bash
-cd clinica-vet-docker
+cd clinica-vet-docker/projeto
 ```
 
 ---
@@ -135,6 +135,20 @@ Este projeto foi desenvolvido com foco em:
 - Integração entre backend e banco de dados
 - Persistência de dados
 - Organização de infraestrutura em ambientes isolados
+
+---
+
+## 🐳 Imagem Pública no DockerHub
+
+A imagem Docker da aplicação foi publicada no DockerHub e pode ser acessada pelo link abaixo:
+
+🔗 https://hub.docker.com/r/gustavoborgonha/clinica-vet-app
+
+### 📥 Baixar a imagem manualmente
+
+```bash
+docker pull gustavoborgonha/clinica-vet-app
+```
 
 ---
 
