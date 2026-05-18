@@ -148,6 +148,7 @@ A imagem Docker da aplicação foi publicada no DockerHub e pode ser acessada pe
 
 ```bash
 docker pull gustavoborgonha/clinica-vet-app
+```
 
 ---
 
